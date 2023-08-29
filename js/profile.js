@@ -1,7 +1,8 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-app.js";
-import { getAuth, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js";
-
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js";
+import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-database.js";
+import { getStorage, ref as storageRef, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-storage.js";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -20,30 +21,55 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
+const database = getDatabase();
+const storage = getStorage();
 
-// Add an authentication state change listener
-onAuthStateChanged(auth, (user) => {
+const profileContainer = document.getElementById("profileContainer");
+const profilePhotoElement = document.getElementById("profilePhoto");
+const profileUsernameElement = document.getElementById("profileUsername");
+const profileEmailElement = document.getElementById("profileEmail");
+const editProfileButton = document.getElementById("edit_profile");
+
+onAuthStateChanged(auth, async (user) => {
     if (user) {
-        // User is signed in
-        const profileContainer = document.getElementById('profile-container');
-        const nameElement = document.getElementById('name');
-        const emailElement = document.getElementById('email');
-        const profilePictureElement = document.getElementById('profile-picture');
+        // Fetch user data from the Realtime Database using their UID
+        const userRef = ref(database, "users/" + user.uid);
+        const snapshot = await get(userRef);
 
-        // Update the profile information on the page
-        nameElement.textContent = user.displayName || "N/A";
-        emailElement.textContent = user.email || "N/A";
-        profilePictureElement.src = user.photoURL || "";
-        console.log("User Photo URL:", user.photoURL);
+        const userData = snapshot.val();
+        if (userData) {
+            // Display the username, email, and profile photo in the profile
+            profileUsernameElement.value = userData.username || "N/A";
+            profileEmailElement.value = user.email || "N/A"; // Use value instead of textContent
 
-        profileContainer.style.display = 'block'; // Display the container
+            // profileUsernameElement.textContent = userData.username || "N/A";
+            // profileEmailElement.textContent = user.email || "N/A";
+
+            if (userData.profilePhotoURL) {
+                // Get the download URL of the profile photo from Storage
+                profilePhotoElement.src = userData.profilePhotoURL;
+            } else {
+                profilePhotoElement.src = "./res/default-profile-photo.png"; // Replace with your default image
+            }
+
+            profileContainer.style.display = "block";
+        } else {
+            // Handle the case where user data is not available
+            profileUsernameElement.textContent = "Username not found";
+            profileEmailElement.textContent = "Email not found";
+            profilePhotoElement.src = "./res/default-profile-photo.png"; // Replace with your default image
+            profileContainer.style.display = "block";
+        }
     } else {
-        // User is signed out
-        console.log("User is signed out");
+        // Redirect to login page if user is not authenticated
+        window.location.href = "login.html";
     }
 });
 
-document.getElementById('edit_profile').addEventListener('click', function () {
-    // Redirect to another HTML page
+// Edit Profile button click event
+
+editProfileButton.addEventListener('click', function (event) {
+    event.preventDefault();
+    // Redirect to the edit profile page
     window.location.href = "edit_profile.html";
 });

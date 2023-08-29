@@ -29,22 +29,22 @@ document.getElementById('registrationForm').addEventListener('submit', function 
 
     var email = document.getElementById("email").value;
     var pass = document.getElementById("password").value;
-    var username = document.getElementById("username").value; // Capture the username
+    var username = document.getElementById("username").value;
 
     createUserWithEmailAndPassword(auth, email, pass)
         .then((userCredential) => {
             // Registration successful
-            const user = userCredential.user;
 
             // Store user data in the Realtime Database
+            const user = userCredential.user;
             const userDataRef = ref(database, "users/" + user.uid);
             set(userDataRef, {
                 username: username, // Use the captured username value
-                email: user.email
+                email: email // Use the captured email value
             })
             .then(() => {
-                alert("Thank you to join us");
-                // Redirect to login.html after successful registration
+                alert("Thank you for joining us");
+                // Redirect to dashboard.html after successful registration
                 window.location.href = "dashboard.html";
             })
             .catch(error => {

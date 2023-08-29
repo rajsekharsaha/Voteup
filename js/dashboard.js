@@ -23,28 +23,3 @@ const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const auth = getAuth();
 
-// Logout function
-document.getElementById('logout').addEventListener('click', function (event) {
-    event.preventDefault();
-    signOut(auth)
-        .then(() => {
-            // Sign-out successful
-            alert("Logged out successfully");
-
-            // Redirect to login.html or perform other actions
-            window.location.href = "login.html";
-        })
-        .catch((error) => {
-            const errorMessage = error.message;
-            alert("Logout failed. " + errorMessage);
-        });
-});
-
-//block previous page
-function blockPreviousPage() {
-    history.pushState(null, null, location.href);
-    window.onpopstate = function (event) {
-        history.go(1);
-    };
-}
-blockPreviousPage();

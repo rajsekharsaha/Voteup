@@ -1,7 +1,8 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-app.js";
-import { getAuth, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js";
-
+import { getAuth, onAuthStateChanged, updateEmail } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js";
+import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-database.js";
+import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-storage.js";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -20,36 +21,65 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
+const database = getDatabase();
+const storage = getStorage();
 
-// Function to update the user's profile
-function updateProfileInfo(user, name, email, profilePicture) {
-    updateProfile(user, {
-        displayName: name,
-        email: email,
-        photoURL: profilePicture
-    }).then(() => {
-        alert("Profile updated successfully");
-    }).catch((error) => {
-        alert("Profile update failed: " + error.message);
-    });
-}
+const editProfileForm = document.getElementById('editProfileForm');
 
-// Add event listener for the form submission
-document.getElementById('profile-form').addEventListener('submit', function (event) {
-    event.preventDefault();
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        const userRef = ref(database, "users/" + user.uid);
 
-    // Get the updated profile information from the form
-    const newName = document.getElementById("name").value;
-    const newEmail = document.getElementById("email").value;
-    const newProfilePicture = document.getElementById("profile-picture").value;
+        editProfileForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const newUsername = document.getElementById('username').value;
+            const newEmail = document.getElementById('email').value;
 
-    // Check if the user is authenticated
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            // Call the function to update the profile
-            updateProfileInfo(user, newName, newEmail, newProfilePicture);
-        } else {
-            alert("User not authenticated. Please log in.");
-        }
-    });
+            // Prepare the data to be updated
+            const newData = {
+                username: newUsername,
+                email: newEmail,
+            };
+
+            // Update user's email in authentication
+            try {
+                await updateEmail(user, newEmail);
+            } catch (error) {
+                console.error(error);
+                // Handle email update errors
+            }
+
+            // Handle profile photo update
+            const profilePhotoInput = document.getElementById('profilePhoto');
+            if (profilePhotoInput.files.length > 0) {
+                const photoFile = profilePhotoInput.files[0];
+
+                const storagePath = `profile_photos/${user.uid}/${photoFile.name}`;
+                const storageRefPath = storageRef(storage, storagePath);
+
+                // Upload the file to Firebase Storage
+                await uploadBytes(storageRefPath, photoFile);
+
+                // Get the download URL of the uploaded image
+                const downloadURL = await getDownloadURL(storageRefPath);
+
+                newData.profilePhotoURL = downloadURL;
+            }
+
+            // Update user data in the database
+            await set(userRef, newData);
+
+            // Provide feedback to the user
+            const feedbackElement = document.getElementById('feedback');
+            feedbackElement.textContent = 'Profile updated successfully';
+
+            // Optional: Refresh the page or perform other actions
+        });
+    } else {
+        // User is not logged in, redirect to login page
+        window.location.href = "login.html";
+    }
 });
+
+
+
