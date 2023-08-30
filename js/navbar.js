@@ -35,11 +35,23 @@ document.getElementById('home').addEventListener('click', function (event) {
     window.location.href = "dashboard.html";
 });
 
+//game
+document.getElementById('users').addEventListener('click', function (event) {
+    event.preventDefault();
+    window.location.href = "users.html";
+});
+
 //profile
 document.getElementById('profile').addEventListener('click', function (event) {
     event.preventDefault();
     window.location.href = "profile.html";
 });
+
+//profile
+// document.getElementById('changepass').addEventListener('click', function (event) {
+//     event.preventDefault();
+//     window.location.href = "changepass.html";
+// });
 
 // Logout function
 document.getElementById('logout').addEventListener('click', function (event) {

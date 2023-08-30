@@ -37,7 +37,7 @@ document.getElementById('registrationForm').addEventListener('submit', function 
 
             // Store user data in the Realtime Database
             const user = userCredential.user;
-            const userDataRef = ref(database, "users/" + user.uid);
+            const userDataRef = ref(database, "users/" + user.uid); //user.uid
             set(userDataRef, {
                 username: username, // Use the captured username value
                 email: email // Use the captured email value
