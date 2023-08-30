@@ -35,10 +35,16 @@ document.getElementById('home').addEventListener('click', function (event) {
     window.location.href = "dashboard.html";
 });
 
-//game
+//users
 document.getElementById('users').addEventListener('click', function (event) {
     event.preventDefault();
     window.location.href = "users.html";
+});
+
+//users
+document.getElementById('game').addEventListener('click', function (event) {
+    event.preventDefault();
+    window.location.href = "game.html";
 });
 
 //profile
