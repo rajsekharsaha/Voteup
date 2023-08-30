@@ -41,10 +41,16 @@ document.getElementById('users').addEventListener('click', function (event) {
     window.location.href = "users.html";
 });
 
-//users
+//game
 document.getElementById('game').addEventListener('click', function (event) {
     event.preventDefault();
     window.location.href = "game.html";
+});
+
+//game
+document.getElementById('point_table').addEventListener('click', function (event) {
+    event.preventDefault();
+    window.location.href = "point_table.html";
 });
 
 //profile

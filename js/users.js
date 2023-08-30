@@ -45,7 +45,7 @@ function displayUserImages() {
                 img.src = profileImageUrl;
                 img.className = "card-img-top";
                 img.style.width = "100%"; // Set width to 100% for responsiveness
-                img.style.height = "50vh"; // Set a fixed height for each image
+                img.style.height = "300px"; // Set image height
 
                 cardInner.appendChild(img);
 
