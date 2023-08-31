@@ -16,30 +16,26 @@ firebase.initializeApp(firebaseConfig);
 
 // ... Your Firebase configuration and initialization code ...
 
-var imageArray = []; // Array to store fetched images
+var imageArray = [];
 var imageContainer = document.getElementById("imageContainer");
 var userPoints = {};
 var database = firebase.database();
-var userPointsRef = database.ref("userPoints");
+var usersRef = database.ref("users");
 var skipButton = document.getElementById("skipButton");
 
-
-// Fetch photos from the Firebase Realtime Database
 function fetchPhotos() {
-    var database = firebase.database();
-    var usersRef = database.ref("users");
-
     usersRef.once("value")
         .then(function (snapshot) {
             snapshot.forEach(function (childSnapshot) {
                 var user = childSnapshot.val();
-                var profileImageUrl = user.profilePhotoURL; // Use the correct property name
-                var username = user.username; // Get the username
-                imageArray.push({ profileImageUrl, username });
+                var profileImageUrl = user.profilePhotoURL;
+                var username = user.username;
+                var uid = childSnapshot.key;
+                imageArray.push({ profileImageUrl, username, uid });
             });
 
             if (imageArray.length >= 2) {
-                displayRandomPhotos(); // Display random photos without the need for a vote button
+                displayRandomPhotos();
             } else {
                 imageContainer.textContent = "Not enough photos available for voting.";
             }
@@ -49,10 +45,8 @@ function fetchPhotos() {
         });
 }
 
-// Display random photos for voting
 function displayRandomPhotos() {
-
-    imageContainer.innerHTML = ""; // Clear existing content
+    imageContainer.innerHTML = "";
 
     var randomIndex1 = Math.floor(Math.random() * imageArray.length);
     var randomIndex2 = Math.floor(Math.random() * imageArray.length);
@@ -64,27 +58,23 @@ function displayRandomPhotos() {
     var photo1 = imageArray[randomIndex1];
     var photo2 = imageArray[randomIndex2];
 
-    // Create card components with images and usernames
-    var card1 = createCard(photo1.profileImageUrl, photo1.username);
-    var card2 = createCard(photo2.profileImageUrl, photo2.username);
+    var card1 = createCard(photo1.profileImageUrl, photo1.username, photo1.uid);
+    var card2 = createCard(photo2.profileImageUrl, photo2.username, photo2.uid);
 
-    // Clear existing content and append new cards
-    imageContainer.innerHTML = "";
     imageContainer.appendChild(card1);
     addVsText();
     imageContainer.appendChild(card2);
 }
 
-// Create a card component
-function createCard(imageUrl, username) {
+function createCard(imageUrl, username, uid) {
     var card = document.createElement("div");
     card.className = "card m-2";
-    card.style.width = "300px"; // Set card width
+    card.style.width = "300px";
 
     var img = document.createElement("img");
     img.src = imageUrl;
     img.className = "card-img-top clickable-image";
-    img.style.height = "250px"; // Set image height
+    img.style.height = "250px";
 
     var cardBody = document.createElement("div");
     cardBody.className = "card-body";
@@ -99,23 +89,18 @@ function createCard(imageUrl, username) {
 
     var pointsElement = document.createElement("p");
     pointsElement.className = "card-points text-center text-success";
-    pointsElement.textContent = "Points: " + (userPoints[username] || 0); // Default to 0 points
+    pointsElement.textContent = "Points: " + (userPoints[uid] || 0);
 
     cardBody.appendChild(usernameElement);
-    cardBody.appendChild(pointsElement); // Add points element below username
+    cardBody.appendChild(pointsElement);
 
-    //skip button
-    
-
-    // Add click event listener to the image
     img.addEventListener("click", function () {
-        handleImageClick(username);
+        handleImageClick(uid);
     });
 
     return card;
 }
 
-// Add "vs" text between the images
 function addVsText() {
     var vsText = document.createElement("p");
     vsText.className = "text-center my-4 mx-3";
@@ -124,37 +109,28 @@ function addVsText() {
     imageContainer.appendChild(vsText);
 }
 
-// Handle image click
-function handleImageClick(username) {
-    if (!userPoints[username]) {
-        userPoints[username] = 0;
+function handleImageClick(uid) {
+    if (!userPoints[uid]) {
+        userPoints[uid] = 0;
     }
 
-    userPoints[username]++;
+    userPoints[uid]++;
 
-    // Update points in the database
-    userPointsRef.child(username).set(userPoints[username]);
+    usersRef.child(uid).update({ points: userPoints[uid] });
 
-    console.log(username, "earned a point. Total points:", userPoints[username]);
+    updatePointsUI(uid);
 
-    updatePointsUI(username);
-
-    // Refresh photos for voting
     displayRandomPhotos();
 }
 
-
-
-
-//featch points
 function fetchUserPoints() {
-    userPointsRef.once("value")
+    usersRef.once("value")
         .then(function (snapshot) {
             snapshot.forEach(function (childSnapshot) {
-                var username = childSnapshot.key;
-                var points = childSnapshot.val();
-                userPoints[username] = points;
-                updatePointsUI(username);
+                var uid = childSnapshot.key;
+                var points = childSnapshot.val().points || 0;
+                userPoints[uid] = points;
+                updatePointsUI(uid);
             });
         })
         .catch(function (error) {
@@ -162,16 +138,10 @@ function fetchUserPoints() {
         });
 }
 
-// Fetch user points when the page loads
-fetchUserPoints();
+function updatePointsUI(uid) {
+    var points = userPoints[uid] || 0;
 
-
-// Update UI to show user points
-function updatePointsUI(username) {
-    var points = userPoints[username] || 0; // Get the user's points or default to 0
-
-    // Find the card element corresponding to the username
-    var card = document.querySelector(`[data-username="${username}"]`);
+    var card = document.querySelector(`[data-uid="${uid}"]`);
     if (card) {
         var pointsElement = card.querySelector(".card-points");
         if (pointsElement) {
@@ -180,11 +150,14 @@ function updatePointsUI(username) {
     }
 }
 
+window.onload = function () {
+    fetchPhotos();
+    fetchUserPoints();
+};
 
-
-// Fetch photos when the page loads
-fetchPhotos();
-
+skipButton.addEventListener("click", function () {
+    displayRandomPhotos();
+});
 
 // Get references to elements
 

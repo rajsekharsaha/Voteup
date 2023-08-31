@@ -15,28 +15,43 @@ var userPoints = {};
 var pointTableBody = document.getElementById("pointTableBody");
 
 function fetchUserPoints() {
-    var database = firebase.database();
-    var userPointsRef = database.ref("userPoints");
+    pointTableBody.innerHTML = "<tr><td colspan='3' class='text-center'>Loading...</td></tr>"; // Show loading message
 
-    userPointsRef.once("value")
+    var database = firebase.database();
+    var usersRef = database.ref("users");
+
+    usersRef.once("value")
         .then(function (snapshot) {
-            userPoints = snapshot.val() || {};
-            populatePointTable();
+            if (snapshot.exists()) {
+                snapshot.forEach(function (childSnapshot) {
+                    var user = childSnapshot.val();
+                    var uid = childSnapshot.key;
+                    var points = user.points || 0;
+                    userPoints[uid] = { points: points, username: user.username };
+                });
+
+                populatePointTable();
+            } else {
+                pointTableBody.innerHTML = "<tr><td colspan='3' class='text-center'>No data found.</td></tr>";
+            }
         })
         .catch(function (error) {
             console.log(error);
+            pointTableBody.innerHTML = "<tr><td colspan='3' class='text-center'>Error fetching data.</td></tr>";
         });
 }
+
+var prevTopUser = null; // Variable to track previous top user
 
 function populatePointTable() {
     pointTableBody.innerHTML = ""; // Clear existing content
 
     var sortedUsers = Object.keys(userPoints).sort(function (a, b) {
-        return userPoints[b] - userPoints[a];
+        return userPoints[b].points - userPoints[a].points;
     });
 
-    sortedUsers.forEach(function (username, index) {
-        var points = userPoints[username];
+    sortedUsers.forEach(function (uid, index) {
+        var userData = userPoints[uid];
         var rank = index + 1;
 
         var row = document.createElement("tr");
@@ -45,27 +60,62 @@ function populatePointTable() {
         var pointsCell = document.createElement("td");
 
         rankCell.textContent = rank;
-        usernameCell.textContent = username;
-        pointsCell.textContent = points;
+        usernameCell.textContent = userData.username;
+        pointsCell.textContent = userData.points;
 
         row.appendChild(rankCell);
         row.appendChild(usernameCell);
         row.appendChild(pointsCell);
 
+        if (index === 0) {
+            row.style.backgroundColor = "#176B87"; // Set solid color for top user
+            row.style.color = "white"; // Set white text color for top user
+
+            if (prevTopUser !== userData.username) {
+                row.classList.add("blink"); // Apply blink effect if the user is new top
+            }
+            
+            // Continuously add the blink class to the top user
+            if (prevTopUser === userData.username && !row.classList.contains("blink")) {
+                row.classList.add("blink");
+            }
+
+            prevTopUser = userData.username; // Update the previous top user
+        } else {
+            row.style.backgroundColor = "transparent"; // Reset background color for other rows
+            row.style.color = "black"; // Set black text color for other rows
+            row.classList.remove("blink"); // Remove blink effect for non-top users
+        }
+
         pointTableBody.appendChild(row);
     });
 }
 
-// Fetch user points and populate point table when the page loads
+
+
+
+
+
+// Listen for changes to user points in the database
+function listenForPointChanges() {
+    var database = firebase.database();
+    var usersRef = database.ref("users");
+
+    usersRef.on("child_changed", function (snapshot) {
+        var uid = snapshot.key;
+        var user = snapshot.val();
+        var points = user.points || 0;
+        userPoints[uid].points = points;
+        populatePointTable();
+    });
+}
+
+// Fetch initial user points and populate point table when the page loads
 window.onload = function () {
     fetchUserPoints();
+    listenForPointChanges();
+
+   
 };
 
 
-
-
-// ... (Your existing event listener code)
-
-// Fetch user points and populate point table when the page loads
-fetchUserPoints();
-populatePointTable();
