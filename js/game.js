@@ -31,7 +31,9 @@ function fetchPhotos() {
                 var profileImageUrl = user.profilePhotoURL;
                 var username = user.username;
                 var uid = childSnapshot.key;
-                imageArray.push({ profileImageUrl, username, uid });
+                if (uid !== firebase.auth().currentUser.uid) { // Exclude current user's photo
+                    imageArray.push({ profileImageUrl, username, uid });
+                }
             });
 
             if (imageArray.length >= 2) {

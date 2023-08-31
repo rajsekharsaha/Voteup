@@ -70,6 +70,7 @@ function populatePointTable() {
         if (index === 0) {
             row.style.backgroundColor = "#176B87"; // Set solid color for top user
             row.style.color = "white"; // Set white text color for top user
+            row.style.fontWeight = "bolder"; // Set white text color for top user
 
             if (prevTopUser !== userData.username) {
                 row.classList.add("blink"); // Apply blink effect if the user is new top
