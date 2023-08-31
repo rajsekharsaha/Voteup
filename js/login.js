@@ -8,13 +8,13 @@ import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https:/
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyDc0LPuRl1K6W6rBeZU_kOVsiPGDof4Gkg",
-  authDomain: "best-8c0e6.firebaseapp.com",
-  projectId: "best-8c0e6",
-  storageBucket: "best-8c0e6.appspot.com",
-  messagingSenderId: "765419235049",
-  appId: "1:765419235049:web:00e0863554e4d85f60f278",
-  measurementId: "G-TKRDTR487L"
+    apiKey: "AIzaSyDc0LPuRl1K6W6rBeZU_kOVsiPGDof4Gkg",
+    authDomain: "best-8c0e6.firebaseapp.com",
+    projectId: "best-8c0e6",
+    storageBucket: "best-8c0e6.appspot.com",
+    messagingSenderId: "765419235049",
+    appId: "1:765419235049:web:00e0863554e4d85f60f278",
+    measurementId: "G-TKRDTR487L"
 };
 
 // Initialize Firebase
@@ -29,6 +29,11 @@ document.getElementById('loginForm').addEventListener('submit', function (event)
     var email = document.getElementById("login-email").value;
     var pass = document.getElementById("login-password").value;
 
+    //disable button
+    const submitButton = document.getElementById("submit");
+    submitButton.disabled = true;
+    submitButton.innerHTML = "Loading...";
+
     signInWithEmailAndPassword(auth, email, pass)
         .then((userCredential) => {
             // Signed in
@@ -39,10 +44,18 @@ document.getElementById('loginForm').addEventListener('submit', function (event)
             document.getElementById("login-email").value = "";
             document.getElementById("login-password").value = "";
 
+            // Restore the submit button's state
+            submitButton.innerHTML = "Register";
+            submitButton.disabled = false;
+
             // Redirect to the dashboard page
             window.location.href = "dashboard.html";
         })
         .catch((error) => {
+
+            // Restore the submit button's state
+            submitButton.innerHTML = "Register";
+            submitButton.disabled = false;
             const errorCode = error.code;
             const errorMessage = error.message;
             alert(errorMessage);

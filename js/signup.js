@@ -31,6 +31,11 @@ document.getElementById('registrationForm').addEventListener('submit', function 
     var pass = document.getElementById("password").value;
     var username = document.getElementById("username").value;
 
+    // Disable the submit button and show loading state
+    const submitButton = document.getElementById("submit");
+    submitButton.disabled = true;
+    submitButton.innerHTML = "Loading...";
+
     createUserWithEmailAndPassword(auth, email, pass)
         .then((userCredential) => {
             // Registration successful
@@ -42,16 +47,26 @@ document.getElementById('registrationForm').addEventListener('submit', function 
                 username: username, // Use the captured username value
                 email: email // Use the captured email value
             })
-            .then(() => {
-                alert("Thank you for joining us");
-                // Redirect to dashboard.html after successful registration
-                window.location.href = "dashboard.html";
-            })
-            .catch(error => {
-                alert("Registration failed. " + error.message);
-            });
+                .then(() => {
+                    alert("Thank you for joining us");
+
+                    // Restore the submit button's state
+                    submitButton.innerHTML = "Register";
+                    submitButton.disabled = false;
+                    // Redirect to dashboard.html after successful registration
+                    window.location.href = "dashboard.html";
+                })
+                .catch(error => {
+                    alert("Registration failed. " + error.message);
+                });
         })
         .catch((error) => {
+
+            // Restore the submit button's state
+            submitButton.innerHTML = "Register";
+            submitButton.disabled = false;
+
+            
             const errorCode = error.code;
             const errorMessage = error.message;
             alert("Registration failed. " + errorMessage);
@@ -94,4 +109,3 @@ function blockPreviousPage() {
         history.go(1);
     };
 }
-

@@ -15,57 +15,49 @@ function displayUserImages() {
     var usersRef = database.ref("users");
 
     var imageContainer = document.getElementById("imageContainer");
+    imageContainer.innerHTML = ""; // Clear any existing content
 
     usersRef.once("value")
         .then(function (snapshot) {
-            var rowDiv = document.createElement("div");
-            rowDiv.className = "row";
-
-            snapshot.forEach(function (childSnapshot, index) {
-                if (index % 4 === 0) {
-                    imageContainer.appendChild(rowDiv);
-                    rowDiv = document.createElement("div");
-                    rowDiv.className = "row";
-                }
-
+            snapshot.forEach(function (childSnapshot) {
                 var user = childSnapshot.val();
                 var profileImageUrl = user.profilePhotoURL; // Use the correct property name
                 var username = user.username;
 
                 // Create a Bootstrap card
-
                 var card = document.createElement("div");
-                card.className = "col-lg-3 col-md-6 col-12";
-
-                var cardInner = document.createElement("div");
-                cardInner.className = "card mt-4";
-
-                // Create image element
-                var img = document.createElement("img");
-                img.src = profileImageUrl;
-                img.className = "card-img-top";
-                img.style.width = "100%"; // Set width to 100% for responsiveness
-                img.style.height = "300px"; // Set image height
-
-                cardInner.appendChild(img);
+                card.className = "card mb-2 p-2";
 
                 // Create card body
                 var cardBody = document.createElement("div");
-                cardBody.className = "card-body";
+                cardBody.className = "d-flex align-items-center";
+
+                // Create user image element
+                var userImage = document.createElement("img");
+                userImage.src = profileImageUrl;
+                userImage.className = "rounded-circle me-2";
+                userImage.style.width = "50px";
+                userImage.style.height = "50px";
+
+                cardBody.appendChild(userImage);
 
                 // Create username element
                 var usernameElement = document.createElement("p");
-                usernameElement.className = "card-text";
-                usernameElement.className = "text-center fw-bold";
+                usernameElement.className = "mb-0";
                 usernameElement.textContent = username;
+
                 cardBody.appendChild(usernameElement);
 
-                cardInner.appendChild(cardBody);
-                card.appendChild(cardInner);
-                rowDiv.appendChild(card);
-            });
+                // Create add button
+                var addButton = document.createElement("button");
+                addButton.className = "btn btn-primary btn-sm ms-auto";
+                addButton.textContent = "Add";
 
-            imageContainer.appendChild(rowDiv);
+                cardBody.appendChild(addButton);
+
+                card.appendChild(cardBody);
+                imageContainer.appendChild(card);
+            });
         })
         .catch(function (error) {
             console.log(error);
