@@ -29,16 +29,24 @@ const editProfileForm = document.getElementById('editProfileForm');
 onAuthStateChanged(auth, (user) => {
     if (user) {
         const userRef = ref(database, "users/" + user.uid);
+        const updateProfileButton = document.getElementById("edit_profile");
 
         editProfileForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+
+            // Disable the update profile button and show loading state
+            updateProfileButton.disabled = true;
+            updateProfileButton.innerHTML = "Updating...";
+
             const newUsername = document.getElementById('username').value;
             const newEmail = document.getElementById('email').value;
+            const newGender = document.getElementById('gender').value;
 
             // Prepare the data to be updated
             const newData = {
                 username: newUsername,
                 email: newEmail,
+                gender: newGender, // Add gender to the data
             };
 
             // Update user's email in authentication
@@ -69,6 +77,10 @@ onAuthStateChanged(auth, (user) => {
             // Update user data in the database
             await set(userRef, newData);
 
+            // Restore the update profile button's state
+            updateProfileButton.innerHTML = "Update Profile";
+            updateProfileButton.disabled = false;
+
             // Provide feedback to the user
             const feedbackElement = document.getElementById('feedback');
             feedbackElement.textContent = 'Profile updated successfully';
@@ -80,5 +92,6 @@ onAuthStateChanged(auth, (user) => {
         window.location.href = "login.html";
     }
 });
+
 
 

@@ -136,3 +136,25 @@ function displayUserImages() {
 
 // Call the function when the page loads
 window.onload = displayUserImages;
+
+============================================
+
+<!-- <h1>Complete Your Profile</h1>
+    <form id="profileSetupForm">
+        <label for="gender">Gender:</label>
+        <input type="text" id="gender" name="gender" required>
+
+        <label for="photoAddress">Photo Address:</label>
+        <input type="text" id="photoAddress" name="photoAddress" required>
+
+        <label for="bio">Bio:</label>
+        <textarea id="bio" name="bio" required></textarea>
+
+        <label for="dateOfBirth">Date of Birth:</label>
+        <input type="date" id="dateOfBirth" name="dateOfBirth" required>
+
+        <label for="interestedTopics">Interested Topics:</label>
+        <input type="text" id="interestedTopics" name="interestedTopics" required>
+
+        <button type="submit">Save Profile</button>
+    </form> -->
