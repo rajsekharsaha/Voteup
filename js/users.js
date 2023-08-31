@@ -35,22 +35,22 @@ function displayUserImages() {
                 // Create user image element
                 var userImage = document.createElement("img");
                 userImage.src = profileImageUrl;
-                userImage.className = "rounded-circle me-2";
-                userImage.style.width = "50px";
-                userImage.style.height = "50px";
+                userImage.className = "col-5 rounded-circle me-2 img-thumbnail border img-border";
+                userImage.style.width = "70px";
+                userImage.style.height = "70px";
 
                 cardBody.appendChild(userImage);
 
                 // Create username element
                 var usernameElement = document.createElement("p");
-                usernameElement.className = "mb-0";
+                usernameElement.className = "mb-0 col-5 text-start";
                 usernameElement.textContent = username;
 
                 cardBody.appendChild(usernameElement);
 
                 // Create add button
                 var addButton = document.createElement("button");
-                addButton.className = "btn btn-primary btn-sm ms-auto";
+                addButton.className = "btn btn-primary btn-sm ms-auto mx-end col-lg-1 col-md-1 col-2";
                 addButton.textContent = "Add";
 
                 cardBody.appendChild(addButton);
