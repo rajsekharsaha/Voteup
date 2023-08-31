@@ -51,7 +51,7 @@ function displayUserImages() {
                 // Create add button
                 var addButton = document.createElement("button");
                 addButton.className = "btn btn-primary btn-sm ms-auto mx-end col-lg-1 col-md-1 col-2";
-                addButton.textContent = "Add";
+                addButton.textContent = "View";
 
                 cardBody.appendChild(addButton);
 
