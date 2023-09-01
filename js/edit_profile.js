@@ -1,13 +1,9 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, updateEmail } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js";
-import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-database.js";
+import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-database.js";
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-storage.js";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+// Your Firebase configuration here
 const firebaseConfig = {
     apiKey: "AIzaSyDc0LPuRl1K6W6rBeZU_kOVsiPGDof4Gkg",
     authDomain: "best-8c0e6.firebaseapp.com",
@@ -18,85 +14,151 @@ const firebaseConfig = {
     measurementId: "G-TKRDTR487L"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
 const database = getDatabase();
 const storage = getStorage();
 
-const editProfileForm = document.getElementById('editProfileForm');
+document.addEventListener('DOMContentLoaded', function () {
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            const userRef = ref(database, "users/" + user.uid);
+            const updateProfileButton = document.getElementById("edit_profile");
+            const clearImageButton = document.getElementById("clear_image");
 
-onAuthStateChanged(auth, (user) => {
-    if (user) {
-        const userRef = ref(database, "users/" + user.uid);
-
-        editProfileForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const newUsername = document.getElementById('username').value;
-            const newEmail = document.getElementById('email').value;
-
-            //disable button
-            const submitButton = document.getElementById("edit_profile");
-            submitButton.disabled = true;
-            submitButton.innerHTML = "Loading...";
-
-            // Prepare the data to be updated
-            const newData = {
-                username: newUsername,
-                email: newEmail,
+            // Function to fetch user data from the Realtime Database
+            const fetchUserData = async () => {
+                const snapshot = await get(userRef);
+                return snapshot.val() || {};
             };
 
-            // Update user's email in authentication
-            try {
-                await updateEmail(user, newEmail);
-            } catch (error) {
-                console.error(error);
-                // Handle email update errors
+            // Function to clear the image input field
+            const clearImageInput = () => {
+                const profilePhotoInput = document.getElementById('profilePhoto');
+                profilePhotoInput.value = ''; // Clear the selected file
+            };
+
+            // Populate the form with existing user data
+            const populateForm = async () => {
+                const existingData = await fetchUserData();
+                document.getElementById('username').value = existingData.username || '';
+                document.getElementById('email').value = existingData.email || '';
+                document.getElementById('gender').value = existingData.gender || '';
+                document.getElementById('bio').value = existingData.bio || '';
+                document.getElementById('address').value = existingData.address || '';
+                document.getElementById('dob').value = existingData.dob || '';
+                document.getElementById('socialLink').value = existingData.socialLink || '';
+            };
+
+            populateForm();
+
+            updateProfileButton.addEventListener('click', async () => {
+                // Disable the update profile button and show loading state
+                updateProfileButton.disabled = true;
+                updateProfileButton.textContent = "Updating...";
+
+                const newUsername = document.getElementById('username').value;
+                const newEmail = document.getElementById('email').value;
+                const newGender = document.getElementById('gender').value;
+                const newBio = document.getElementById('bio').value;
+                const newAddress = document.getElementById('address').value;
+                const newDOB = document.getElementById('dob').value;
+                const newSocialLink = document.getElementById('socialLink').value;
+
+                // Fetch the existing user data
+                const existingData = await fetchUserData();
+
+                // Prepare the data to be updated, only updating fields that have new values
+                const newData = {
+                    username: newUsername || existingData.username || '',
+                    email: newEmail || existingData.email || '',
+                    gender: newGender || existingData.gender || '',
+                    bio: newBio || existingData.bio || '',
+                    address: newAddress || existingData.address || '',
+                    dob: newDOB || existingData.dob || '',
+                    socialLink: newSocialLink || existingData.socialLink || '',
+                };
 
 
-                // Restore the submit button's state
-                submitButton.innerHTML = "Edit profile";
-                submitButton.disabled = false;
-            }
+                // Update user's email in authentication
+                try {
+                    await updateEmail(user, newEmail);
+                } catch (error) {
+                    console.error(error);
+                    // Handle email update errors
+                }
 
-            // Handle profile photo update
-            const profilePhotoInput = document.getElementById('profilePhoto');
-            if (profilePhotoInput.files.length > 0) {
-                const photoFile = profilePhotoInput.files[0];
+                // Handle profile photo update
+                const profilePhotoInput = document.getElementById('profilePhoto');
+                if (profilePhotoInput.files.length > 0) {
+                    const photoFile = profilePhotoInput.files[0];
 
-                const storagePath = `profile_photos/${user.uid}/${photoFile.name}`;
-                const storageRefPath = storageRef(storage, storagePath);
+                    const storagePath = `profile_photos/${user.uid}/${photoFile.name}`;
+                    const storageRefPath = storageRef(storage, storagePath);
 
-                // Upload the file to Firebase Storage
-                await uploadBytes(storageRefPath, photoFile);
+                    try {
+                        // Upload the file to Firebase Storage
+                        await uploadBytes(storageRefPath, photoFile);
 
-                // Get the download URL of the uploaded image
-                const downloadURL = await getDownloadURL(storageRefPath);
+                        // Get the download URL of the uploaded image
+                        const downloadURL = await getDownloadURL(storageRefPath);
 
-                newData.profilePhotoURL = downloadURL;
-            }
+                        // Update the user's profile with the download URL
+                        await update(userRef, { profilePhotoURL: downloadURL });
 
-            // Update user data in the database
-            await set(userRef, newData);
+                        // Clear the image input field
+                        clearImageInput();
 
-            // Provide feedback to the user
-            const feedbackElement = document.getElementById('feedback');
-            const profileLink = document.getElementById('profile_link');
-            feedbackElement.textContent = 'Profile updated successfully';
-            profileLink.innerHTML = '<a href="profile.html" class="btn btn-primary rounded w-100">View Profile</a>';
+                        // Provide feedback to the user
 
+                        // updateProfileButton.disabled = false;
+                        // updateProfileButton.textContent = "Update profile";
 
-            // Restore the submit button's state
-            submitButton.innerHTML = "Edit profile";
-            submitButton.disabled = false;
+                        // const feedbackElement = document.getElementById('feedback');
+                        // feedbackElement.textContent = 'Profile photo updated successfully';
+                    } catch (error) {
+                        // Handle errors, such as network issues or storage permission issues
+                        updateProfileButton.disabled = false;
+                        updateProfileButton.textContent = "Update profile";
+                        console.error("Error uploading image:", error);
+                        // Provide feedback to the user about the error
+                    }
+                } else {
+                    // Continue with updating other profile fields and saving to the Realtime Database
+                    await update(userRef, newData);
 
+                    // Provide feedback to the user
 
-            // Optional: Refresh the page or perform other actions
-        });
-    } else {
-        // User is not logged in, redirect to login page
-        window.location.href = "login.html";
-    }
+                    updateProfileButton.disabled = false;
+                    updateProfileButton.textContent = "Update profile";
+
+                    const feedbackElement = document.getElementById('feedback');
+                    feedbackElement.textContent = 'Profile updated successfully';
+                    window.location.href = "profile.html";
+                }
+            });
+
+        } else {
+            // User is not logged in, handle as needed
+        }
+    });
 });
 
+// Define a function to clear all text fields
+function clearAllFields() {
+    const inputFields = document.querySelectorAll('input[type="text"], input[type="email"], input[type="file"], input[type="url"], input[type="date"],  textarea');
+    inputFields.forEach((field) => {
+        field.value = '';
+    });
+    const genderSelect = document.getElementById('gender');
+    genderSelect.selectedIndex = 0;
+}
 
+// Attach a click event listener to a "Clear All" button or element
+const clearAllButton = document.getElementById('clearAllButton'); // Replace with the actual ID of your clear button
+
+if (clearAllButton) {
+    clearAllButton.addEventListener('click', () => {
+        clearAllFields();
+    });
+}

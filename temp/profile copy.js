@@ -40,13 +40,7 @@ onAuthStateChanged(auth, async (user) => {
         if (userData) {
             // Display the username, email, and profile photo in the profile
             profileUsernameElement.value = userData.username || "N/A";
-            profileEmailElement.value = user.email || "N/A";
-            document.getElementById('gender').value = userData.gender || 'N/A';
-            document.getElementById('bio').textContent = userData.bio || 'New User';
-            document.getElementById('bio').style.fontWeight = "bolder";
-            document.getElementById('address').value = userData.address || 'N/A';
-            document.getElementById('dob').value = userData.dob || 'N/A';
-            document.getElementById('socialLink').value = userData.socialLink || 'N/A'; // Use value instead of textContent
+            profileEmailElement.value = user.email || "N/A"; // Use value instead of textContent
 
             // profileUsernameElement.textContent = userData.username || "N/A";
             // profileEmailElement.textContent = user.email || "N/A";

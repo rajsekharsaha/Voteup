@@ -1,17 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="./css/game.css">
-    <title>Game</title>
+    <title>Document</title>
 </head>
-
 <body>
-
-
     <!-- navbar start -->
     <nav class="navbar navbar-expand-lg bg-primary">
         <div class="container-fluid mx-lg-5 mx-md-3 mx-1">
@@ -52,32 +48,44 @@
     </nav>
     <!-- navbar end -->
 
-    <!-- game start -->
-    <div class="container mt-4 text-center">
-        <h2>Whom do you like ?</h2>
-        <p style="font-size: 20px;">click to choose... !</p>
-        <hr class="w-50 mx-auto">
-        <div class="row">
-            <div class="col-md-12 text-center">
-                <div id="imageContainer" class="pt-lg-2 d-flex justify-content-center align-items-center flex-wrap">
-                </div>
-                <button id="skipButton" class="btn btn-secondary" style="width: 60%; margin-top: 10px;">Skip</button>
-            </div>
+    <!-- <h1>Forgot Password</h1>
+    <form id="forgotPasswordForm">
+        <div>
+            <label for="email">Email:</label>
+            <input type="email" id="email" required>
+        </div>
+        <button type="submit">Reset Password</button>
+    </form> -->
+    
+
+    <!-- forgetpass start -->
+    <div class="container-fluid mt-5 d-flex justify-content-center align-items-center">
+        <div class="col-md-6">
+            <h2 class="mb-4 text-center">Forgot Password</h2>
+            <form class="bg-light px-5 py-5 rounded" id="forgotPasswordForm">
+                    <div class="form-group pt-3">
+                        <!-- <label for="email">Email address</label> -->
+                        <div class="input-group mb-2 mr-sm-2">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">📧</div>
+                            </div>
+                        <input type="email" class="form-control" id="email" name="email" required placeholder="email">
+                    </div>
+                    <div class="my-4 text-center">
+                        <p id="feedback"></p>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block w-100" id="submit">Reset password</button>                    
+            </form>
         </div>
     </div>
-    <!-- game end -->
+    <!-- forgetpass end -->
 
-
-
+    <!-- Include Firebase and the JavaScript file -->
+    <script type="module" src="https://www.gstatic.com/firebasejs/10.3.0/firebase-app.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="./js/forgetpass.js"></script>
+    <script type="module" src="./js/navbar.js"></script>
 </body>
-<!-- Include Firebase script and configuration -->
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-<!-- Include Firebase Authentication script -->
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
-<!-- Include your JavaScript file -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-<script type="module" src="./js/navbar.js"></script>
-<script src="./js/game.js"></script>
 
 </html>

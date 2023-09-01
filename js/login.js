@@ -54,7 +54,7 @@ document.getElementById('loginForm').addEventListener('submit', function (event)
         .catch((error) => {
 
             // Restore the submit button's state
-            submitButton.innerHTML = "Register";
+            submitButton.innerHTML = "Login";
             submitButton.disabled = false;
             const errorCode = error.code;
             const errorMessage = error.message;

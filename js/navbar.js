@@ -59,11 +59,11 @@ document.getElementById('profile').addEventListener('click', function (event) {
     window.location.href = "profile.html";
 });
 
-//profile
-// document.getElementById('changepass').addEventListener('click', function (event) {
-//     event.preventDefault();
-//     window.location.href = "changepass.html";
-// });
+profile
+document.getElementById('forgetpass').addEventListener('click', function (event) {
+    event.preventDefault();
+    window.location.href = "forgetpass.html";
+});
 
 // Logout function
 document.getElementById('logout').addEventListener('click', function (event) {

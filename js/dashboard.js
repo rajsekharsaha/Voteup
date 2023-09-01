@@ -1,13 +1,4 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-app.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-analytics.js";
-import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged ,signOut } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js";
-
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+// Your Firebase configuration here
 const firebaseConfig = {
     apiKey: "AIzaSyDc0LPuRl1K6W6rBeZU_kOVsiPGDof4Gkg",
     authDomain: "best-8c0e6.firebaseapp.com",
@@ -18,8 +9,46 @@ const firebaseConfig = {
     measurementId: "G-TKRDTR487L"
 };
 
+// checkProfile.js
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js";
+import { getDatabase , ref ,get} from "https://www.gstatic.com/firebasejs/10.3.0/firebase-database.js";
+
+// Import your Firebase configuration from the firebase-config module
+// import { firebaseConfig } from ".https://www.gstatic.com/firebasejs/10.3.0/firebase-config.js";
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-const auth = getAuth();
+const auth = getAuth(app);
+const database = getDatabase(app);
 
+// Check if the user is authenticated
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        // User is authenticated, get their UID (user ID)
+        const userId = user.uid;
+
+        // Reference to the user's data in the Realtime Database
+        const userRef = ref(database, `users/${userId}`);
+
+        // Fetch the user data from the Realtime Database
+        get(userRef)
+            .then((snapshot) => {
+                const userData = snapshot.val();
+
+                if (!userData || !userData.profilePhotoURL) {
+                    // Profile photo is not found, redirect to complete_profile.html
+                    window.location.href = "complete_profile.html";
+                } else {
+                    // Profile photo exists, continue with your application logic
+                }
+            })
+            .catch((error) => {
+                console.error("Error fetching user data:", error);
+                // Handle the error as needed
+            });
+    } else {
+        // User is not authenticated, handle as needed (e.g., redirect to login)
+        window.location.href = "login.html";
+    }
+});
