@@ -8,12 +8,14 @@ const firebaseConfig = {
     measurementId: "G-TKRDTR487L"
 };
 
+// Initialize Firebase (include your Firebase configuration)
 firebase.initializeApp(firebaseConfig);
 
-function displayUserImages() {
-    var database = firebase.database();
-    var usersRef = database.ref("users");
+// Reference to the users in the Realtime Database
+var usersRef = firebase.database().ref("users");
 
+// Function to display user images
+function displayUserImages() {
     var imageContainer = document.getElementById("imageContainer");
     imageContainer.innerHTML = ""; // Clear any existing content
 
@@ -24,15 +26,13 @@ function displayUserImages() {
                 var profileImageUrl = user.profilePhotoURL; // Use the correct property name
                 var username = user.username;
 
-                // Create a Bootstrap card
+                // Create a Bootstrap card (similar to your existing code)
                 var card = document.createElement("div");
                 card.className = "card mb-2 p-2";
 
-                // Create card body
                 var cardBody = document.createElement("div");
                 cardBody.className = "d-flex align-items-center";
 
-                // Create user image element
                 var userImage = document.createElement("img");
                 userImage.src = profileImageUrl;
                 userImage.className = "col-5 rounded-circle me-2 img-thumbnail border img-border";
@@ -41,14 +41,12 @@ function displayUserImages() {
 
                 cardBody.appendChild(userImage);
 
-                // Create username element
                 var usernameElement = document.createElement("p");
                 usernameElement.className = "mb-0 col-5 text-start";
                 usernameElement.textContent = username;
 
                 cardBody.appendChild(usernameElement);
 
-                // Create add button
                 var addButton = document.createElement("button");
                 addButton.className = "btn btn-primary btn-sm ms-auto mx-end col-lg-1 col-md-1 col-2";
                 addButton.textContent = "View";
@@ -64,5 +62,86 @@ function displayUserImages() {
         });
 }
 
-// Call the function when the page loads
+// Function to filter users by username
+function filterUsersByUsername(query) {
+    query = query.toLowerCase();
+
+    usersRef.once("value")
+        .then(function (snapshot) {
+            var filteredUsers = [];
+
+            snapshot.forEach(function (childSnapshot) {
+                var user = childSnapshot.val();
+                var username = user.username.toLowerCase();
+
+                if (username.includes(query)) {
+                    filteredUsers.push(user);
+                }
+            });
+
+            // Display filtered users
+            displayFilteredUsers(filteredUsers);
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+}
+
+// Function to display filtered users
+function displayFilteredUsers(users) {
+    var imageContainer = document.getElementById("imageContainer");
+    imageContainer.innerHTML = ""; // Clear any existing content
+
+    users.forEach(function (user) {
+        var profileImageUrl = user.profilePhotoURL;
+        var username = user.username;
+
+        // Create Bootstrap cards for filtered users (similar to your existing code)
+        var card = document.createElement("div");
+        card.className = "card mb-2 p-2";
+
+        var cardBody = document.createElement("div");
+        cardBody.className = "d-flex align-items-center";
+
+        var userImage = document.createElement("img");
+        userImage.src = profileImageUrl;
+        userImage.className = "col-5 rounded-circle me-2 img-thumbnail border img-border";
+        userImage.style.width = "70px";
+        userImage.style.height = "70px";
+
+        cardBody.appendChild(userImage);
+
+        var usernameElement = document.createElement("p");
+        usernameElement.className = "mb-0 col-5 text-start";
+        usernameElement.textContent = username;
+
+        cardBody.appendChild(usernameElement);
+
+        var addButton = document.createElement("button");
+        addButton.className = "btn btn-primary btn-sm ms-auto mx-end col-lg-1 col-md-1 col-2";
+        addButton.textContent = "View";
+
+        cardBody.appendChild(addButton);
+
+        card.appendChild(cardBody);
+        imageContainer.appendChild(card);
+    });
+}
+
+// Call the function to display all user images when the page loads
 window.onload = displayUserImages;
+
+// Add an event listener to the search button
+var searchButton = document.getElementById("searchButton");
+searchButton.addEventListener("click", function () {
+    var searchInput = document.getElementById("searchInput");
+    var query = searchInput.value.trim();
+
+    if (query !== "") {
+        // Filter users by username and display the results
+        filterUsersByUsername(query);
+    } else {
+        // If the search input is empty, display all user images
+        displayUserImages();
+    }
+});

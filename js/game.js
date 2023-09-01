@@ -158,14 +158,10 @@ window.onload = function () {
 };
 
 
-
 // Get references to elements
 
 skipButton.addEventListener("click", function () {
     displayRandomPhotos();
 });
-
-
-
 
 
