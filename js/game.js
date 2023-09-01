@@ -10,6 +10,14 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
+// Define a function to show the loading element.
+function showLoading() {
+    var loadingElement = document.getElementById("loading");
+    loadingElement.style.display = "block";
+}
+
+
+
 
 
 // Your Firebase configuration and initialization code
@@ -23,7 +31,20 @@ var database = firebase.database();
 var usersRef = database.ref("users");
 var skipButton = document.getElementById("skipButton");
 
+// Define a function to show the loading element.
+function showLoading() {
+    var loadingElement = document.getElementById("loading");
+    loadingElement.style.display = "block";
+}
+
+// Define a function to hide the loading element.
+function hideLoading() {
+    var loadingElement = document.getElementById("loading");
+    loadingElement.style.display = "none";
+}
+
 function fetchPhotos() {
+    showLoading(); // Show loading element
     usersRef.once("value")
         .then(function (snapshot) {
             snapshot.forEach(function (childSnapshot) {
@@ -41,8 +62,11 @@ function fetchPhotos() {
             } else {
                 imageContainer.textContent = "Not enough photos available for voting.";
             }
+
+            hideLoading(); // Hide loading element after fetching images
         })
         .catch(function (error) {
+            hideLoading(); // Hide loading element in case of an error
             console.log(error);
         });
 }
