@@ -35,6 +35,11 @@ onAuthStateChanged(auth, (user) => {
             const newUsername = document.getElementById('username').value;
             const newEmail = document.getElementById('email').value;
 
+            //disable button
+            const submitButton = document.getElementById("edit_profile");
+            submitButton.disabled = true;
+            submitButton.innerHTML = "Loading...";
+
             // Prepare the data to be updated
             const newData = {
                 username: newUsername,
@@ -47,6 +52,11 @@ onAuthStateChanged(auth, (user) => {
             } catch (error) {
                 console.error(error);
                 // Handle email update errors
+
+
+                // Restore the submit button's state
+                submitButton.innerHTML = "Edit profile";
+                submitButton.disabled = false;
             }
 
             // Handle profile photo update
@@ -71,7 +81,15 @@ onAuthStateChanged(auth, (user) => {
 
             // Provide feedback to the user
             const feedbackElement = document.getElementById('feedback');
+            const profileLink = document.getElementById('profile_link');
             feedbackElement.textContent = 'Profile updated successfully';
+            profileLink.innerHTML = '<a href="profile.html" class="btn btn-primary rounded w-100">View Profile</a>';
+
+
+            // Restore the submit button's state
+            submitButton.innerHTML = "Edit profile";
+            submitButton.disabled = false;
+
 
             // Optional: Refresh the page or perform other actions
         });

@@ -10,7 +10,7 @@
 
 <body>
 
-    
+
     <!-- navbar start -->
     <nav class="navbar navbar-expand-lg bg-primary">
         <div class="container-fluid mx-lg-5 mx-md-3 mx-1">
@@ -81,7 +81,8 @@
                     <div class="input-group-prepend">
                         <div class="input-group-text">👤</div>
                     </div>
-                    <input class="form-control" type="text" id="username" name="username" placeholder="username" required>
+                    <input class="form-control" type="text" id="username" name="username" placeholder="username"
+                        required>
                 </div>
                 <div class="form-group pt-3">
                     <div class="input-group mb-2 mr-sm-2">
@@ -100,9 +101,16 @@
                     </div>
                 </div>
                 <div class="text-center text-success my-3">
-                    <p id="feedback"></p>
-                </div>
-                <button class="btn btn-primary w-100 mt-1" id="edit_profile">Edit Profile</button>
+                    <div class="flex-row">
+                        <div class="col">
+                            <p id="feedback"></p>
+                        </div>
+                        <div class="col">
+                            <p id="profile_link"></p>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary w-100 mt-1" id="edit_profile">Edit Profile</button>
+                    <div id="loadingIndicator" style="display: none;">Updating...</div>
             </form>
         </div>
     </div>
