@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js";
-import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-database.js";
+import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-database.js";
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-storage.js";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -31,70 +31,69 @@ onAuthStateChanged(auth, (user) => {
         const userRef = ref(database, "users/" + user.uid);
         const updateProfileButton = document.getElementById("edit_profile");
 
-        editProfileForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
+        // Retrieve existing user data from the Realtime Database
+        get(userRef).then((snapshot) => {
+            const existingData = snapshot.val() || {};
 
-            // Disable the update profile button and show loading state
-            updateProfileButton.disabled = true;
-            updateProfileButton.innerHTML = "Updating...";
+            // ... (previous code)
 
-            const newGender = document.getElementById('gender').value;
-            const newBio = document.getElementById('bio').value;
-            const newAddress = document.getElementById('address').value;
-            const newDOB = document.getElementById('dob').value;
-            const newSocialLink = document.getElementById('socialLink').value;
+            editProfileForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
 
-            // Prepare the data to be updated
-            const newData = {
-                gender: newGender,
-                bio: newBio,
-                address: newAddress,
-                dob: newDOB,
-                socialLink: newSocialLink,
-            };
+                // Disable the update profile button and show loading state
+                updateProfileButton.disabled = true;
+                updateProfileButton.innerHTML = "Updating...";
 
-            // Update user profile in authentication
-            try {
-                await updateProfile(user, { displayName: newBio });
-            } catch (error) {
-                console.error(error);
-                // Handle profile update errors
-            }
+                const newGender = document.getElementById('gender').value;
+                const newBio = document.getElementById('bio').value;
+                const newAddress = document.getElementById('address').value;
+                const newDOB = document.getElementById('dob').value;
+                const newSocialLink = document.getElementById('socialLink').value;
 
-            // Handle profile photo update
-            const profilePhotoInput = document.getElementById('profilePhoto');
-            if (profilePhotoInput.files.length > 0) {
-                const photoFile = profilePhotoInput.files[0];
+                // Merge the new data with the existing data
+                const newData = {
+                    ...existingData,
+                    gender: newGender || existingData.gender,
+                    bio: newBio || existingData.bio,
+                    address: newAddress || existingData.address,
+                    dob: newDOB || existingData.dob,
+                    socialLink: newSocialLink || existingData.socialLink,
+                };
 
-                const storagePath = `profile_photos/${user.uid}/${photoFile.name}`;
-                const storageRefPath = storageRef(storage, storagePath);
+                // Handle profile photo update
+                const profilePhotoInput = document.getElementById('profilePhoto');
+                if (profilePhotoInput.files.length > 0) {
+                    const photoFile = profilePhotoInput.files[0];
 
-                // Upload the file to Firebase Storage
-                await uploadBytes(storageRefPath, photoFile);
+                    const storagePath = `profile_photos/${user.uid}/${photoFile.name}`;
+                    const storageRefPath = storageRef(storage, storagePath);
 
-                // Get the download URL of the uploaded image
-                const downloadURL = await getDownloadURL(storageRefPath);
+                    // Upload the file to Firebase Storage
+                    await uploadBytes(storageRefPath, photoFile);
 
-                newData.profilePhotoURL = downloadURL;
-            }
+                    // Get the download URL of the uploaded image
+                    const downloadURL = await getDownloadURL(storageRefPath);
 
-            // Update user data in the database
-            await set(userRef, newData);
+                    newData.profilePhotoURL = downloadURL;
+                }
 
-            // Restore the update profile button's state
-            updateProfileButton.innerHTML = "Update Profile";
-            updateProfileButton.disabled = false;
+                // Update user data in the database
+                await set(userRef, newData);
 
-            // Provide feedback to the user
-            const feedbackElement = document.getElementById('feedback');
-            feedbackElement.textContent = 'Profile updated successfully';
+                // Restore the update profile button's state
+                updateProfileButton.innerHTML = "Update Profile";
+                updateProfileButton.disabled = false;
 
-            // Optional: Refresh the page or perform other actions
+                // Provide feedback to the user
+                const feedbackElement = document.getElementById('feedback');
+                feedbackElement.textContent = 'Profile updated successfully';
+
+                // Optional: Refresh the page or perform other actions
+            });
+
         });
     } else {
         // User is not logged in, redirect to the login page
         window.location.href = "login.html";
     }
 });
-
-
