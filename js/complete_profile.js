@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-app.js";
-import { getAuth, onAuthStateChanged, updateEmail } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js";
 import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-database.js";
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-storage.js";
 // TODO: Add SDKs for Firebase products that you want to use
@@ -38,23 +38,27 @@ onAuthStateChanged(auth, (user) => {
             updateProfileButton.disabled = true;
             updateProfileButton.innerHTML = "Updating...";
 
-            const newUsername = document.getElementById('username').value;
-            const newEmail = document.getElementById('email').value;
             const newGender = document.getElementById('gender').value;
+            const newBio = document.getElementById('bio').value;
+            const newAddress = document.getElementById('address').value;
+            const newDOB = document.getElementById('dob').value;
+            const newSocialLink = document.getElementById('socialLink').value;
 
             // Prepare the data to be updated
             const newData = {
-                username: newUsername,
-                email: newEmail,
-                gender: newGender, // Add gender to the data
+                gender: newGender,
+                bio: newBio,
+                address: newAddress,
+                dob: newDOB,
+                socialLink: newSocialLink,
             };
 
-            // Update user's email in authentication
+            // Update user profile in authentication
             try {
-                await updateEmail(user, newEmail);
+                await updateProfile(user, { displayName: newBio });
             } catch (error) {
                 console.error(error);
-                // Handle email update errors
+                // Handle profile update errors
             }
 
             // Handle profile photo update
@@ -88,10 +92,9 @@ onAuthStateChanged(auth, (user) => {
             // Optional: Refresh the page or perform other actions
         });
     } else {
-        // User is not logged in, redirect to login page
+        // User is not logged in, redirect to the login page
         window.location.href = "login.html";
     }
 });
-
 
 
