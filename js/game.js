@@ -18,8 +18,6 @@ function showLoading() {
 
 
 
-
-
 // Your Firebase configuration and initialization code
 
 // ... Your Firebase configuration and initialization code ...
@@ -180,6 +178,11 @@ window.onload = function () {
     fetchPhotos();
     fetchUserPoints();
 };
+// Get references to elements
+
+skipButton.addEventListener("click", function () {
+    displayRandomPhotos();
+});
 
 
 // Get references to elements
