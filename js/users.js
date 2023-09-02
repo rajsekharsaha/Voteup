@@ -73,7 +73,7 @@ function displayUserImages() {
                         <div class="modal-content">
                             <div class="modal-header">
                                 <h5 class="modal-title">${username}'s Profile</h5>
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <button type="button" class="btn-close" data-dismiss="modal">&times;</button>
                             </div>
                             <div class="modal-body">
                                 <img src="${profileImageUrl}" class="img-thumbnail" style="width: 100px; height: 100px;"><br>
@@ -95,7 +95,7 @@ function displayUserImages() {
                     $(modal).modal("show");
 
                     // Add a click event listener to the modal close button
-                    modal.querySelector('.close').addEventListener("click", function () {
+                    modal.querySelector('.btn-close').addEventListener("click", function () {
                         // Close the modal
                         $(modal).modal("hide");
                         // Remove the modal from the DOM after it's hidden
@@ -194,7 +194,7 @@ function displayFilteredUsers(users) {
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">${username}'s Profile</h5>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <button type="button" class="btn-close" data-dismiss="modal">&times;</button>
                     </div>
                     <div class="modal-body">
                         <img src="${profileImageUrl}" class="img-thumbnail" style="width: 100px; height: 100px;"><br>
@@ -216,7 +216,7 @@ function displayFilteredUsers(users) {
             $(modal).modal("show");
 
             // Add a click event listener to the modal close button
-            modal.querySelector('.close').addEventListener("click", function () {
+            modal.querySelector('.btn-close').addEventListener("click", function () {
                 // Close the modal
                 $(modal).modal("hide");
                 // Remove the modal from the DOM after it's hidden
