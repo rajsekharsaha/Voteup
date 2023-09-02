@@ -24,12 +24,6 @@ function displayUserImages() {
             snapshot.forEach(function (childSnapshot) {
                 var user = childSnapshot.val();
                 var profileImageUrl = user.profilePhotoURL; // Use the correct property name
-                var email = user.email;
-                var bio = user.bio;
-                var address = user.address;
-                var dob = user.dob;
-                var points = user.points;
-                var sociallink = user.socialLink;
                 var username = user.username;
 
                 // Create a Bootstrap card (similar to your existing code)
@@ -54,7 +48,7 @@ function displayUserImages() {
 
                 cardBody.appendChild(usernameElement);
 
-
+                
 
                 var addButton = document.createElement("button");
                 addButton.className = "btn btn-primary btn-sm ms-auto mx-end col-lg-1 col-md-1 col-2 rounded-circle me-2 fa fa-eye";
@@ -62,48 +56,6 @@ function displayUserImages() {
                 addButton.style.height = "50px";
 
                 cardBody.appendChild(addButton);
-
-                // Add a click event listener to the "View" button
-                addButton.addEventListener("click", function () {
-                    // Create a Bootstrap modal
-                    var modal = document.createElement("div");
-                    modal.className = "modal fade";
-                    modal.innerHTML = `
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title">${username}'s Profile</h5>
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            </div>
-                            <div class="modal-body">
-                                <img src="${profileImageUrl}" class="img-thumbnail" style="width: 100px; height: 100px;"><br>
-                                <p>${bio}</p>
-                                <p>points : ${points}</p>
-                                <p>Date of birth : ${dob}</p>
-                                <p>Address : ${address}</p>
-                                <p>Contact me : <a href="${sociallink}">click here</a></p>
-                                
-                            </div>
-                        </div>
-                    </div>
-                    `;
-
-                    // Append the modal to the body
-                    document.body.appendChild(modal);
-
-                    // Show the modal
-                    $(modal).modal("show");
-
-                    // Add a click event listener to the modal close button
-                    modal.querySelector('.close').addEventListener("click", function () {
-                        // Close the modal
-                        $(modal).modal("hide");
-                        // Remove the modal from the DOM after it's hidden
-                        modal.addEventListener('hidden.bs.modal', function () {
-                            modal.remove();
-                        });
-                    });
-                });
 
                 card.appendChild(cardBody);
                 imageContainer.appendChild(card);
@@ -147,17 +99,10 @@ function displayFilteredUsers(users) {
     users.forEach(function (user) {
         var profileImageUrl = user.profilePhotoURL;
         var username = user.username;
-        var email = user.email;
-        var bio = user.bio;
-        var address = user.address;
-        var dob = user.dob;
-        var points = user.points;
-        var sociallink = user.socialLink;
-        var username = user.username;
 
         // Create Bootstrap cards for filtered users (similar to your existing code)
         var card = document.createElement("div");
-        card.className = "card mb-2 p-2 rounded-pill";
+        card.className = "card mb-2 p-2";
 
         var cardBody = document.createElement("div");
         cardBody.className = "d-flex align-items-center";
@@ -173,71 +118,19 @@ function displayFilteredUsers(users) {
         var usernameElement = document.createElement("p");
         usernameElement.className = "mb-0 col-5 text-start";
         usernameElement.textContent = username;
-        usernameElement.style.fontSize = "12px";
 
         cardBody.appendChild(usernameElement);
 
         var addButton = document.createElement("button");
-        addButton.className = "btn btn-primary btn-sm ms-auto mx-end col-lg-1 col-md-1 col-2 rounded-circle me-2 fa fa-eye view";
-        addButton.style.width = "50px";
-        addButton.style.height = "50px";
+        addButton.className = "btn btn-primary btn-sm ms-auto mx-end col-lg-1 col-md-1 col-2";
+        addButton.textContent = "go";
+
         cardBody.appendChild(addButton);
-
-
-        // Add a click event listener to the "View" button
-        addButton.addEventListener("click", function () {
-            // Create a Bootstrap modal
-            var modal = document.createElement("div");
-            modal.className = "modal fade";
-            modal.innerHTML = `
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">${username}'s Profile</h5>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                        <img src="${profileImageUrl}" class="img-thumbnail" style="width: 100px; height: 100px;"><br>
-                        <p>${bio}</p>
-                        <p>points : ${points}</p>
-                        <p>Date of birth : ${dob}</p>
-                        <p>Address : ${address}</p>
-                        <p>Contact me : <a href="${sociallink}">click here</a></p>
-                        
-                    </div>
-                </div>
-            </div>
-            `;
-
-            // Append the modal to the body
-            document.body.appendChild(modal);
-
-            // Show the modal
-            $(modal).modal("show");
-
-            // Add a click event listener to the modal close button
-            modal.querySelector('.close').addEventListener("click", function () {
-                // Close the modal
-                $(modal).modal("hide");
-                // Remove the modal from the DOM after it's hidden
-                modal.addEventListener('hidden.bs.modal', function () {
-                    modal.remove();
-                });
-            });
-        });
-
-        addButton.addEventListener
 
         card.appendChild(cardBody);
         imageContainer.appendChild(card);
-
     });
 }
-
-
-
-// Call the function to display all user images when the page loads
-window.onload = displayUserImages;
 
 // Add an event listener to the search button
 var searchButton = document.getElementById("searchButton");
@@ -254,11 +147,7 @@ searchButton.addEventListener("click", function () {
     }
 });
 
-// ...
+// Call the function to display all user images when the page loads
+window.onload = displayUserImages;
 
 
-
-
-
-
-// ...
