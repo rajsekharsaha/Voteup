@@ -22,9 +22,23 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const database = getDatabase(app);
 
+// Define a function to show the loading element.
+function showLoading() {
+    var loadingElement = document.getElementById("loading");
+    loadingElement.style.display = "block";
+}
+
+// Define a function to hide the loading element.
+function hideLoading() {
+    var loadingElement = document.getElementById("loading");
+    loadingElement.style.display = "none";
+}
+
+showLoading();
 // Check if the user is authenticated
 onAuthStateChanged(auth, (user) => {
     if (user) {
+        hideLoading();
         // User is authenticated, get their UID (user ID)
         const userId = user.uid;
 
@@ -48,6 +62,7 @@ onAuthStateChanged(auth, (user) => {
                 // Handle the error as needed
             });
     } else {
+        hideLoading();
         // User is not authenticated, handle as needed (e.g., redirect to login)
         window.location.href = "login.html";
     }

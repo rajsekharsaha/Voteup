@@ -18,11 +18,33 @@ const firebaseConfig = {
     measurementId: "G-TKRDTR487L"
 };
 
+// Define a function to show the loading element.
+function showLoading() {
+    var loadingElement = document.getElementById("loading");
+    loadingElement.style.display = "block";
+}
+
+// Define a function to hide the loading element.
+function hideLoading() {
+    var loadingElement = document.getElementById("loading");
+    loadingElement.style.display = "none";
+}
+
+showLoading();
+
+
+// Call the function when the page loads
+window.onload = function () {
+    checkLoginStatus();
+};
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const auth = getAuth();
 const database = getDatabase(); // Initialize the Realtime Database
+
+
 
 document.getElementById('registrationForm').addEventListener('submit', function (event) {
     event.preventDefault(); // Prevent the default form submission behavior
@@ -84,11 +106,13 @@ set(staticDataRef, {
 function checkLoginStatus() {
     onAuthStateChanged(auth, (user) => {
         if (user) {
+            hideLoading();
             // User is logged in
             window.location.href = "dashboard.html";
             // console.log("User is logged in:", user.email);
             // Redirect to dashboard.html or perform actions accordingly
         } else {
+            hideLoading();
             // User is not logged in
             console.log("User is not logged in");
             // You might want to show a login form or perform other actions
@@ -96,16 +120,13 @@ function checkLoginStatus() {
     });
 }
 
-// Call the function when the page loads
-window.onload = function () {
-    checkLoginStatus();
-};
+
 
 
 //block previous page
-function blockPreviousPage() {
-    history.pushState(null, null, location.href);
-    window.onpopstate = function (event) {
-        history.go(1);
-    };
-}
+// function blockPreviousPage() {
+//     history.pushState(null, null, location.href);
+//     window.onpopstate = function (event) {
+//         history.go(1);
+//     };
+// }

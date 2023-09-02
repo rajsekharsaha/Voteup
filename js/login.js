@@ -22,6 +22,42 @@ const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const auth = getAuth();
 
+// Define a function to show the loading element.
+function showLoading() {
+    var loadingElement = document.getElementById("loading");
+    loadingElement.style.display = "block";
+}
+
+// Define a function to hide the loading element.
+function hideLoading() {
+    var loadingElement = document.getElementById("loading");
+    loadingElement.style.display = "none";
+}
+
+showLoading();
+
+// Function to check if the user is logged in
+function checkLoginStatus() {
+    onAuthStateChanged(auth, (user) => {
+        if (user) {
+            // User is logged in
+            hideLoading();
+            window.location.href = "dashboard.html";
+            // Redirect to dashboard.html or perform actions accordingly
+        } else {
+            hideLoading();
+            // User is not logged in
+            console.log("User is not logged in");
+            // You might want to show a login form or perform other actions
+        }
+    });
+}
+
+// Call the function when the page loads
+window.onload = function () {
+    checkLoginStatus();
+};
+
 // Login function
 document.getElementById('loginForm').addEventListener('submit', function (event) {
     event.preventDefault(); // Prevent the default form submission behavior
@@ -61,22 +97,3 @@ document.getElementById('loginForm').addEventListener('submit', function (event)
             alert(errorMessage);
         });
 });
-// Function to check if the user is logged in
-function checkLoginStatus() {
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            // User is logged in
-            window.location.href = "dashboard.html";
-            // Redirect to dashboard.html or perform actions accordingly
-        } else {
-            // User is not logged in
-            console.log("User is not logged in");
-            // You might want to show a login form or perform other actions
-        }
-    });
-}
-
-// Call the function when the page loads
-window.onload = function () {
-    checkLoginStatus();
-};

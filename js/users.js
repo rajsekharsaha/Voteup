@@ -11,11 +11,25 @@ const firebaseConfig = {
 // Initialize Firebase (include your Firebase configuration)
 firebase.initializeApp(firebaseConfig);
 
+// Define a function to show the loading element.
+function showLoading() {
+    var loadingElement = document.getElementById("loading");
+    loadingElement.style.display = "block";
+}
+
+// Define a function to hide the loading element.
+function hideLoading() {
+    var loadingElement = document.getElementById("loading");
+    loadingElement.style.display = "none";
+}
+
+showLoading();
 // Reference to the users in the Realtime Database
 var usersRef = firebase.database().ref("users");
 
 // Function to display user images
 function displayUserImages() {
+    hideLoading();
     var imageContainer = document.getElementById("imageContainer");
     imageContainer.innerHTML = ""; // Clear any existing content
 
@@ -110,12 +124,14 @@ function displayUserImages() {
             });
         })
         .catch(function (error) {
+            hideLoading();
             console.log(error);
         });
 }
 
 // Function to filter users by username
 function filterUsersByUsername(query) {
+    hideLoading();
     query = query.toLowerCase();
 
     usersRef.once("value")
@@ -135,12 +151,14 @@ function filterUsersByUsername(query) {
             displayFilteredUsers(filteredUsers);
         })
         .catch(function (error) {
+            hideLoading();
             console.log(error);
         });
 }
 
 // Function to display filtered users
 function displayFilteredUsers(users) {
+    hideLoading();
     var imageContainer = document.getElementById("imageContainer");
     imageContainer.innerHTML = ""; // Clear any existing content
 
