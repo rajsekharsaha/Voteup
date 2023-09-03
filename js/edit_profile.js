@@ -139,6 +139,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
 
         } else {
+            window.location.href = "login.html";
             // User is not logged in, handle as needed
         }
     });
