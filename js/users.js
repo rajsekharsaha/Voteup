@@ -91,6 +91,7 @@ function displayUserImages() {
                             </div>
                             <div class="modal-body">
                                 <img src="${profileImageUrl}" class="img-thumbnail" style="width: 100px; height: 100px;"><br>
+                                <br>
                                 <p>${bio}</p>
                                 <p>points : ${points}</p>
                                 <p>Date of birth : ${dob}</p>
@@ -216,6 +217,7 @@ function displayFilteredUsers(users) {
                     </div>
                     <div class="modal-body">
                         <img src="${profileImageUrl}" class="img-thumbnail" style="width: 100px; height: 100px;"><br>
+                        <br>
                         <p>${bio}</p>
                         <p>points : ${points}</p>
                         <p>Date of birth : ${dob}</p>
