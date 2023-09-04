@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (user) {
             const userRef = ref(database, "users/" + user.uid);
             const updateProfileButton = document.getElementById("edit_profile");
-            const clearImageButton = document.getElementById("clear_image");
+            // const clearImageButton = document.getElementById("clear_image");
 
             // Function to fetch user data from the Realtime Database
             const fetchUserData = async () => {
@@ -106,10 +106,13 @@ document.addEventListener('DOMContentLoaded', function () {
                         // Update the user's profile with the download URL
                         await update(userRef, { profilePhotoURL: downloadURL });
 
-                        // Clear the image input field
-                        clearImageInput();
-
                         // Provide feedback to the user
+
+                        updateProfileButton.disabled = false;
+                        updateProfileButton.textContent = "Update profile";
+
+                        const feedbackElement = document.getElementById('feedback');
+                        feedbackElement.textContent = 'Profile updated successfully';
 
                         // updateProfileButton.disabled = false;
                         // updateProfileButton.textContent = "Update profile";
