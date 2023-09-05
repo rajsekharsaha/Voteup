@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-analytics.js";
-import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged ,signOut } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js";
+import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-auth.js";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -92,15 +92,14 @@ document.getElementById('contact').addEventListener('click', function (event) {
 // Logout function
 document.getElementById('logout').addEventListener('click', function (event) {
     event.preventDefault();
-    
+
     const confirmation = confirm("Are you sure you want to logout?");
-    
+
     if (confirmation) {
         signOut(auth)
             .then(() => {
                 // Sign-out successful
                 console.log("Logged out successfully");
-
                 // Redirect to login.html or perform other actions
                 window.location.href = "login.html";
             })
