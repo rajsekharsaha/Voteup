@@ -74,7 +74,7 @@ document.getElementById('feedback').addEventListener('click', function (event) {
 //share
 document.getElementById('share').addEventListener('click', function (event) {
     event.preventDefault();
-    window.location.href = "forgetpass.html";
+    window.location.href = "share.html";
 });
 
 //about
