@@ -1,7 +1,7 @@
 document.write(`
 \
-
-<!-- navbar start -->
+\
+<!-- navbar start -->   
 <nav class="navbar navbar-expand-lg bg-primary">
     <div class="container-fluid mx-lg-5 mx-md-3 mx-1">
         <a class="navbar-brand text-white" id="logo">VoteUp</a>

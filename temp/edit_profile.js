@@ -106,15 +106,16 @@ document.addEventListener('DOMContentLoaded', function () {
                         // Update the user's profile with the download URL
                         await update(userRef, { profilePhotoURL: downloadURL });
 
-                        // Provide feedback to the user
+                        // Clear the image input field
+                        clearImageInput();
 
+                        // Provide feedback to the user
                         updateProfileButton.disabled = false;
                         updateProfileButton.textContent = "Update profile";
 
                         const feedbackElement = document.getElementById('feedback');
                         feedbackElement.textContent = 'Profile photo updated successfully';
-                        window.location.href = "profile.html";
-
+                        
                     } catch (error) {
                         // Handle errors, such as network issues or storage permission issues
                         updateProfileButton.disabled = false;
