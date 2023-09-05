@@ -78,15 +78,9 @@ document.getElementById('share').addEventListener('click', function (event) {
 });
 
 //about
-document.getElementById('about').addEventListener('click', function (event) {
+document.getElementById('d_info').addEventListener('click', function (event) {
     event.preventDefault();
-    window.location.href = "about.html";
-});
-
-//contact
-document.getElementById('contact').addEventListener('click', function (event) {
-    event.preventDefault();
-    window.location.href = "contact.html";
+    window.location.href = "d_info.html";
 });
 
 // Logout function

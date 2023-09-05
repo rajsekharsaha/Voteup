@@ -1,10 +1,10 @@
-document.write(`\
+document.write(`
 \
 
 <!-- navbar start -->
 <nav class="navbar navbar-expand-lg bg-primary">
     <div class="container-fluid mx-lg-5 mx-md-3 mx-1">
-        <a class="navbar-brand text-white" id="logo">VoteUP</a>
+        <a class="navbar-brand text-white" id="logo">VoteUp</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
             data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
             aria-label="Toggle navigation">
@@ -32,11 +32,10 @@ document.write(`\
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" id="profile">Profile</a></li>
                         <li><a class="dropdown-item" id="forgetpass">Forget password</a></li>
-                        <li><a class="dropdown-item" id="logout">Logout</a></li>
-                        <li><a class="dropdown-item" id="share">share</a></li>
-                        <li><a class="dropdown-item" id="about">about</a></li>
-                        <li><a class="dropdown-item" id="contact">contact</a></li>
+                        <li><a class="dropdown-item" id="d_info">developer info</a></li>
                         <li><a class="dropdown-item" id="feedback">feedback</a></li>
+                        <li><a class="dropdown-item" id="share">share</a></li>
+                        <li><a class="dropdown-item" id="logout">Logout</a></li>
                     </ul>
                 </li>
             </ul>
