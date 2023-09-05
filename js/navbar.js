@@ -59,8 +59,32 @@ document.getElementById('profile').addEventListener('click', function (event) {
     window.location.href = "profile.html";
 });
 
-profile
+//forgetpass
 document.getElementById('forgetpass').addEventListener('click', function (event) {
+    event.preventDefault();
+    window.location.href = "forgetpass.html";
+});
+
+//feedback
+document.getElementById('feedback').addEventListener('click', function (event) {
+    event.preventDefault();
+    window.location.href = "forgetpass.html";
+});
+
+//share
+document.getElementById('share').addEventListener('click', function (event) {
+    event.preventDefault();
+    window.location.href = "forgetpass.html";
+});
+
+//about
+document.getElementById('about').addEventListener('click', function (event) {
+    event.preventDefault();
+    window.location.href = "forgetpass.html";
+});
+
+//contact
+document.getElementById('contact').addEventListener('click', function (event) {
     event.preventDefault();
     window.location.href = "forgetpass.html";
 });
