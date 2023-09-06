@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                         // Provide feedback to the user
                         updateProfileButton.disabled = false;
-                        updateProfileButton.textContent = "Update profile";
+                        updateProfileButton.textContent = "Save";
 
                         const feedbackElement = document.getElementById('feedback');
                         feedbackElement.textContent = 'Profile photo updated successfully';
@@ -130,7 +130,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     // Provide feedback to the user
 
                     updateProfileButton.disabled = false;
-                    updateProfileButton.textContent = "Update profile";
+                    updateProfileButton.textContent = "Save";
 
                     const feedbackElement = document.getElementById('feedback');
                     feedbackElement.textContent = 'Profile updated successfully';

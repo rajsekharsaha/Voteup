@@ -26,7 +26,6 @@
                             <div class="input-group-text">Website link</div>
                         </div>
                         <input readonly class="form-control" type="text" id="copyInput" value="https://rajsekharsaha.github.io/best/index.html">
-                        <input readonly class="form-control" type="text" id="copyInput" value="https://storage.googleapis.com/download/storage/v1/b/web-to-native-website-android-apps/o/nAzHPXuU0mg8fAztv2JK.apk?generation=1693929349067465&alt=media">
                         <button onclick="copyToClipboard()">Copy</button>
                     </div>
                 </div>
@@ -35,8 +34,8 @@
                         <div class="input-group-prepend">
                             <div class="input-group-text">App link</div>
                         </div>
-                        <input readonly class="form-control" type="text" id="copyInput" value="https://storage.googleapis.com/download/storage/v1/b/web-to-native-website-android-apps/o/nAzHPXuU0mg8fAztv2JK.apk?generation=1693929349067465&alt=media">
-                        <button onclick="copyToClipboard()">Copy</button>
+                        <input readonly class="form-control" type="text" id="copyInputapp" value="https://storage.googleapis.com/download/storage/v1/b/web-to-native-website-android-apps/o/nAzHPXuU0mg8fAztv2JK.apk?generation=1693929349067465&alt=media">
+                        <button onclick="copyToClipboard2()">Copy</button>
                     </div>
                 </div>
             </form>
@@ -53,6 +52,20 @@
     function copyToClipboard() {
         /* Get the text field */
         var copyInput = document.getElementById("copyInput");
+
+        /* Select the text field */
+        copyInput.select();
+        copyInput.setSelectionRange(0, 99999); /* For mobile devices */
+
+        /* Copy the text inside the text field to the clipboard */
+        document.execCommand("copy");
+
+        /* Alert the copied text */
+        alert("Copied to clipboard: " + copyInput.value);
+    }
+    function copyToClipboard2() {
+        /* Get the text field */
+        var copyInput = document.getElementById("copyInputapp");
 
         /* Select the text field */
         copyInput.select();
