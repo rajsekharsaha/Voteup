@@ -18,11 +18,15 @@ document.write(`
                 <li class="nav-item">
                     <a class="nav-link active text-white" aria-current="page" id="users">Users</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link active text-white" aria-current="page" id="game">Game</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active text-white" aria-current="page" id="point_table">Point table</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        Games
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" aria-current="page" id="game">Game</a></li>
+                        <li><a class="dropdown-item" aria-current="page" id="point_table">Point table</a></li>
+                    </ul>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown"
